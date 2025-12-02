@@ -1,0 +1,186 @@
+<section class="py-16 px-4 max-w-7xl mx-auto">
+  <!-- Header -->
+  <div class="text-center mb-12">
+    <h1 class="text-5xl font-bold text-base-content mb-4">Featured Products</h1>
+    <p class="text-lg text-base-content/60 max-w-2xl mx-auto">
+      Explore our handpicked selection of top-rated products at unbeatable prices.
+    </p>
+  </div>
+
+  <!-- Filters & Controls -->
+  <div class="flex flex-col lg:flex-row items-center justify-between gap-6 mb-10">
+    <!-- Category Filters -->
+    <div class="flex flex-wrap items-center justify-center gap-2">
+      @for (category of categories; track category.id) {
+        <button
+          (click)="handleSelectCategory.emit(category.id)"
+          [class.btn-primary]="selectedCategory === category.id"
+          [class.btn-ghost]="selectedCategory !== category.id"
+          class="btn btn-sm rounded-full px-6 gap-2"
+        >
+          <span class="font-medium">{{ category.name }}</span>
+          <span class="badge badge-sm" [class.badge-primary]="selectedCategory === category.id">
+            {{ category.count }}
+          </span>
+        </button>
+      }
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- View Mode Toggle -->
+      <div class="join flex items-center gap-2">
+        <button
+          (click)="viewMode = 'grid'"
+          [class.btn-active]="viewMode === 'grid'"
+          class="btn btn-sm join-item"
+        >
+          <lucide-icon [img]="Grid3X3" class="w-4 h-4"></lucide-icon>
+        </button>
+        <button
+          (click)="viewMode = 'list'"
+          [class.btn-active]="viewMode === 'list'"
+          class="btn btn-sm join-item"
+        >
+          <lucide-icon [img]="List" class="w-4 h-4"></lucide-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products Grid -->
+  <div
+    [class]="
+      viewMode === 'grid'
+        ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
+        : 'flex flex-col gap-4'
+    "
+  >
+    @for (product of filteredProducts; track product.id) {
+      <div
+        [class]="
+          viewMode === 'grid'
+            ? 'card bg-base-100 shadow-lg card-hover overflow-hidden'
+            : 'card card-side bg-base-100 shadow-lg hover:shadow-xl transition-shadow'
+        "
+      >
+        <!-- Product Image -->
+        <figure [class]="viewMode === 'grid' ? 'relative h-64 overflow-hidden' : 'w-48 h-full'">
+          <img
+            [src]="product.imageUrl"
+            [alt]="product.name"
+            spanclass="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+          />
+
+          <!-- Badges -->
+          @if (viewMode === 'grid') {
+            <div class="absolute top-3 left-3 flex flex-col gap-2">
+              @if (product.isNew) {
+                <span class="badge badge-secondary badge-sm font-semibold shadow-lg">NEW</span>
+              }
+              @if (product.isOnSale) {
+                <span class="badge badge-error badge-sm font-semibold shadow-lg">SALE</span>
+              }
+            </div>
+          }
+
+          <!-- Wishlist Button -->
+          @if (viewMode === 'grid') {
+            <button
+              class="btn btn-circle btn-sm btn-ghost absolute top-3 right-3 bg-white/90 hover:bg-white hover:text-error"
+              (click)="handleAddToFavourites.emit(product)"
+            >
+              <lucide-icon
+                [img]="Heart"
+                [class]="
+                  'w-4 h-4' + (isFavourite(product.id) ? ' fill-error' : ' text-base-content/60')
+                "
+                [class.text-error]="isFavourite(product.id)"
+              ></lucide-icon>
+            </button>
+          }
+        </figure>
+
+        <div class="card-body" [class.p-5]="viewMode === 'grid'">
+          <!-- Badges for List View -->
+          @if (viewMode === 'list') {
+            <div class="flex gap-2 mb-2">
+              @if (product.isNew) {
+                <span class="badge badge-secondary badge-sm font-semibold">NEW</span>
+              }
+              @if (product.isOnSale) {
+                <span class="badge badge-error badge-sm font-semibold">SALE</span>
+              }
+            </div>
+          }
+
+          <!-- Category -->
+          <div class="text-xs text-primary font-semibold uppercase tracking-wider mb-1">
+            {{ product.category }}
+          </div>
+
+          <!-- Product Name -->
+          <h3 class="card-title text-lg font-bold line-clamp-1">
+            {{ product.name }}
+            @if (product.quantity > 0) {
+              <span class="badge badge-accent badge-sm"> {{ product.quantity }} left </span>
+            } @else {
+              <span class="badge badge-error badge-sm"> Out of Stock </span>
+            }
+          </h3>
+
+          <!-- Description -->
+          <p class="text-sm text-base-content/60 line-clamp-2 mb-3">
+            {{ product.description }}
+          </p>
+
+          <!-- Rating -->
+          <div class="flex items-center gap-2 mb-3">
+            <div class="flex items-center gap-1">
+              @for (star of [1, 2, 3, 4, 5]; track $index) {
+                <lucide-icon
+                  [img]="Star"
+                  class="w-4 h-4"
+                  [class.text-warning]="star <= product.rating"
+                  [class.text-base-300]="star > product.rating"
+                  [attr.fill]="star <= product.rating ? 'currentColor' : 'none'"
+                ></lucide-icon>
+              }
+            </div>
+            <span class="text-sm font-medium">{{ product.rating }}</span>
+            <span class="text-xs text-base-content/50">({{ product.reviews }})</span>
+          </div>
+
+          <!-- Price & Actions -->
+          <div class="flex items-center justify-between mt-auto pt-4 border-t border-base-200">
+            <div class="flex flex-col">
+              @if (product.originalPrice) {
+                <span class="text-xs text-base-content/50 line-through">
+                  ${{ product.originalPrice.toFixed(2) }}
+                </span>
+              }
+              <span class="text-2xl font-bold text-primary"> ${{ product.price.toFixed(2) }} </span>
+            </div>
+            <button
+              class="btn btn-primary btn-sm gap-2 rounded-full"
+              (click)="handleAddToCart.emit(product)"
+              [ariaDisabled]="product.quantity === 0"
+              [disabled]="product.quantity === 0"
+            >
+              <lucide-icon [img]="ShoppingCart" class="w-4 h-4"></lucide-icon>
+              <span class="hidden sm:inline">Add</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Empty State -->
+  @if (filteredProducts.length === 0) {
+    <div class="text-center py-20">
+      <div class="text-6xl mb-4">🔍</div>
+      <h3 class="text-2xl font-bold mb-2">No products found</h3>
+      <p class="text-base-content/60">Try adjusting your filters or search criteria.</p>
+    </div>
+  }
+</section>

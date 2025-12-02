@@ -1,3 +1,36 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'tailwindcss';
 
-@import "tailwindcss";
+@plugin "daisyui" {
+  themes:
+    light --default,
+    dark --prefersdark;
+}
+
+@layer base {
+  body {
+    font-family: 'Inter', 'Outfit', sans-serif;
+    @apply bg-base-100 text-base-content antialiased;
+  }
+
+  * {
+    @apply transition-colors duration-200;
+  }
+}
+
+@layer utilities {
+  .btn {
+    @apply shadow-none rounded-xl font-medium;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 ease-out hover:shadow-2xl hover:-translate-y-2;
+  }
+
+  .gradient-border {
+    position: relative;
+    background:
+      linear-gradient(white, white) padding-box,
+      linear-gradient(135deg, hsl(var(--p)), hsl(var(--s))) border-box;
+    border: 2px solid transparent;
+  }
+}

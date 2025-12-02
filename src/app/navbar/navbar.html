@@ -1,0 +1,66 @@
+<div
+  class="sticky top-0 inset-x-0 z-50 bg-base-100/95 backdrop-blur-lg border-b border-base-200/50"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <a
+          href="#"
+          class="flex items-center gap-2 text-lg font-bold text-base-content hover:text-primary transition-colors duration-200"
+        >
+          <lucide-icon [img]="StoreIcon" class="size-[20px]" strokeWidth="2"></lucide-icon>
+          <span class="hidden sm:block">MyStore</span>
+        </a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center space-x-1">
+        <a
+          href="#"
+          class="flex items-center gap-2 text-base-content hover:text-primary px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-base-200"
+        >
+          Categories
+        </a>
+        <a
+          href="#"
+          class="flex items-center gap-2 text-base-content hover:text-primary px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-base-200"
+        >
+          Products
+        </a>
+        <a
+          href="#"
+          class="text-base-content hover:text-primary px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-base-200"
+        >
+          About
+        </a>
+        <a
+          href="#"
+          class="text-base-content hover:text-primary px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-base-200"
+        >
+          Contact
+        </a>
+      </nav>
+
+      <!-- Right Side Actions -->
+      <div class="flex items-center gap-2">
+        <!-- Wishlist -->
+        <button class="btn btn-ghost btn-sm relative btn-circle hidden sm:flex">
+          <lucide-icon [img]="Heart" class="size-5"></lucide-icon>
+          <span class="badge badge-secondary badge-xs size-4 rounded-full absolute -top-1 -right-1">
+            {{ favouritesCount() }}
+          </span>
+        </button>
+
+        <!-- Shopping Cart -->
+        <button class="btn btn-ghost btn-sm btn-circle relative" onclick="my_modal_3.showModal()">
+          <lucide-icon [img]="ShoppingCart" class="size-5"></lucide-icon>
+          <span class="badge badge-primary badge-xs size-4 rounded-full absolute -top-1 -right-1">
+            {{ cartCount() }}
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<h1>{{ cartCount() }}</h1>

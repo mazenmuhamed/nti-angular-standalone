@@ -1,0 +1,16 @@
+@if (!hideBanner) {
+  <div
+    class="w-full relative h-11 bg-gradient-to-r from-primary to-secondary flex items-center justify-center"
+  >
+    <div class="text-sm font-semibold text-primary-content flex items-center gap-2">
+      <span class="text-lg">🎉</span>
+      Subscribe to our newsletter and get 10% off your first order!
+    </div>
+    <button
+      (click)="handleCloseBanner()"
+      class="absolute right-3 top-1/2 z-10 -translate-y-1/2 btn btn-ghost btn-xs btn-circle text-primary-content hover:bg-white/20"
+    >
+      <lucide-icon [img]="XIcon" class="w-4 h-4"></lucide-icon>
+    </button>
+  </div>
+}
